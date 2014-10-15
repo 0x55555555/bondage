@@ -141,7 +141,8 @@ module CPP
           generateEnum(
             library,
             cls,
-            classHeaders)
+            classHeaders,
+            files)
         end
       end
 
@@ -177,7 +178,9 @@ module CPP
     def generateEnum(
         library,
         enum,
-        classHeaders)
+        classHeaders,
+        files)
+      files << enum.parsed.fileLocation
       fullName = enum.parsed.fullyQualifiedName
       classHeaders << "#{MACRO_PREFIX}EXPOSED_ENUM(#{library.exportMacro}, #{fullName})"
     end
