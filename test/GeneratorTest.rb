@@ -424,4 +424,35 @@ class TestGenerator < Test::Unit::TestCase
 
     cleanLibrary(conFn)
   end
+
+  def test_enumGeneration
+    enum = Parser::Library.new("Enum", __dir__ + "/testData/Enum")
+    enum.addIncludePath(".")
+    enum.addFile("Enum.h")
+    enum.addFile("EnumExt.h")
+
+    setupLibrary(enum)
+    exposer, conLib = exposeLibrary(enum)
+
+    libGen = CPP::LibraryGenerator.new(HeaderHelper.new)
+
+    libGen.generate(conLib, exposer)
+
+    expectedHeader = conLib.library.autogenPath(:cpp) + "/../autogen_baked/EnumBaked.h"
+    expectedSource = conLib.library.autogenPath(:cpp) + "/../autogen_baked/EnumBaked.cpp"
+
+    FileUtils.mkdir_p(conLib.library.autogenPath(:cpp))
+    if (false)
+      File.open(expectedHeader, 'w') do |file|
+        file.write(libGen.header)
+      end
+      File.open(expectedSource, 'w') do |file|
+        file.write(libGen.source)
+      end
+    end
+
+    assert_equal File.read(expectedHeader), libGen.header
+    assert_equal File.read(expectedSource), libGen.source
+    cleanLibrary(enum)
+  end
 end
