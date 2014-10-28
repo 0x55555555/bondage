@@ -11,7 +11,7 @@ module Lua
 
       if (mode == :return)
         if (baseType.isInteger)
-          return "(#{arg}-1)"
+          return "(#{arg}+1)"
         else
           return "from_native(#{arg})"
         end
