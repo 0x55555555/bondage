@@ -355,19 +355,19 @@ local TestClassIndexed_luaSample_wrapper = function(...)
   local argCount = select(\"#\", ...)
   if 1 == argCount then
     local ret0 = TestClassIndexed_luaSample_wrapper_fwd(select(1, ...))
-    return (ret0-1)
+    return (ret0+1)
   end
   if 2 == argCount then
     local ret0 = TestClassIndexed_luaSample_wrapper_fwd(select(1, ...), (select(2, ...)-1))
-    return (ret0-1)
+    return (ret0+1)
   end
   if 3 == argCount then
     local ret0 = TestClassIndexed_luaSample_wrapper_fwd(select(1, ...), (select(2, ...)-1), select(3, ...))
-    return (ret0-1)
+    return (ret0+1)
   end
   if 4 == argCount then
     local ret0, ret1, ret2 = TestClassIndexed_luaSample_wrapper_fwd((select(1, ...)-1), select(2, ...), select(3, ...), (select(4, ...)-1))
-    return (ret0-1), (ret1-1), ret2
+    return (ret0+1), (ret1+1), ret2
   end
 end", fnGen.wrapper
 
@@ -428,19 +428,19 @@ local TestClassIndexed_luaSample_wrapper = function(...)
   local argCount = select("#", ...)
   if 1 == argCount then
     local ret0 = TestClassIndexed_luaSample_wrapper_fwd(select(1, ...))
-    return (ret0-1)
+    return (ret0+1)
   end
   if 2 == argCount then
     local ret0 = TestClassIndexed_luaSample_wrapper_fwd(select(1, ...), (select(2, ...)-1))
-    return (ret0-1)
+    return (ret0+1)
   end
   if 3 == argCount then
     local ret0 = TestClassIndexed_luaSample_wrapper_fwd(select(1, ...), (select(2, ...)-1), select(3, ...))
-    return (ret0-1)
+    return (ret0+1)
   end
   if 4 == argCount then
     local ret0, ret1, ret2 = TestClassIndexed_luaSample_wrapper_fwd((select(1, ...)-1), select(2, ...), select(3, ...), (select(4, ...)-1))
-    return (ret0-1), (ret1-1), ret2
+    return (ret0+1), (ret1+1), ret2
   end
 end
 
