@@ -1,24 +1,11 @@
-#include <QString>
-#include <QtTest>
-
-#include "Generator/autogen_Gen/Gen.h"
+#include "RuntimeTest.h"
+#include "Generator/autogen_baked/Gen.h"
 #include "bondage/Library.h"
 #include "bondage/WrappedClass.h"
 #include "CastHelper.Gen_GenCls.h"
 
 #include "StringLibrary/StringLibrary.h"
 #include "StringLibrary/autogen_String/String.h"
-
-class RuntimeTest : public QObject
-  {
-  Q_OBJECT
-
-private Q_SLOTS:
-  void testTypeExistance();
-  void testTypeCasting();
-  void testFunctionExistance();
-  void testStringLibrary();
-  };
 
 template <typename T> struct Helper
   {
@@ -323,5 +310,3 @@ void RuntimeTest::testStringLibrary()
   }
 
 QTEST_APPLESS_MAIN(RuntimeTest)
-
-#include "RuntimeTest.moc"

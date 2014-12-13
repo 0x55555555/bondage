@@ -354,6 +354,22 @@ class TestGenerator < Test::Unit::TestCase
       file.write(libGen.source)
     end
 
+    expectedHeader = lib.library.autogenPath(:cpp) + "/../autogen_baked/String.h"
+    expectedSource = lib.library.autogenPath(:cpp) + "/../autogen_baked/String.cpp"
+
+    if (false)
+      FileUtils.mkdir_p(lib.library.autogenPath(:cpp))
+      File.open(expectedHeader, 'w') do |file|  
+        file.write(libGen.header)
+      end
+      File.open(expectedSource, 'w') do |file|
+        file.write(libGen.source)
+      end
+    end
+
+    assert_equal File.read(expectedHeader), libGen.header
+    assert_equal File.read(expectedSource), libGen.source
+
     if (os != :windows)
       runProcess("test/testGenerator.sh")
     else

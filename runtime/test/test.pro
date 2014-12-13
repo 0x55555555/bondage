@@ -22,16 +22,16 @@ win32-msvc2012 {
 
 SOURCES += \
   RuntimeTest.cpp \
-  ../../test/testData/Generator/autogen_Gen/Gen.cpp \
     ../src/Library.cpp \
     ../src/WrappedClass.cpp \
     ../src/CastHelper.cpp \
-    ../../test/testData/StringLibrary/autogen_String/String.cpp
+    ClassTypeTests.cpp \
+    ../../test/testData/StringLibrary/autogen_baked/String.cpp \
+    ../../test/testData/Generator/autogen_baked/Gen.cpp
 
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
 
 HEADERS += \
-    ../../test/testData/Generator/autogen_Gen/Gen.h \
     ../include/bondage/RuntimeHelpers.h \
     ../include/bondage/RuntimeHelpersImpl.h \
     ../include/bondage/Function.h \
@@ -44,7 +44,10 @@ HEADERS += \
     CastHelper.Gen_GenCls.h \
     CrateTypeHelper.h \
     ../include/bondage/DerivableNonCleanedTraits.h \
-    ../include/bondage/DerivableTraits.h
+    ../include/bondage/DerivableTraits.h \
+    RuntimeTest.h \
+    ../../test/testData/StringLibrary/autogen_baked/String.h \
+    ../../test/testData/Generator/autogen_baked/Gen.h
 
 INCLUDEPATH += \
   ../include/ \
