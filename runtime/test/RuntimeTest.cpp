@@ -1,26 +1,9 @@
 #include "RuntimeTest.h"
 #include "Generator/autogen_baked/Gen.h"
-#include "bondage/Library.h"
-#include "bondage/WrappedClass.h"
 #include "CastHelper.Gen_GenCls.h"
 
 #include "StringLibrary/StringLibrary.h"
-#include "StringLibrary/autogen_String/String.h"
-
-template <typename T> struct Helper
-  {
-  typedef Crate::Traits<T> Traits;
-
-  static std::unique_ptr<Reflect::example::Object> create(
-      bondage::Builder::Boxer *boxer,
-      T *data)
-    {
-    auto box = boxer->create<Traits>();
-    Traits::box(boxer, box.get(), data);
-
-    return box;
-    }
-  };
+#include "StringLibrary/autogen_baked/String.h"
 
 void RuntimeTest::testTypeExistance()
   {

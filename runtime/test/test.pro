@@ -47,14 +47,17 @@ HEADERS += \
     ../include/bondage/DerivableTraits.h \
     RuntimeTest.h \
     ../../test/testData/StringLibrary/autogen_baked/String.h \
-    ../../test/testData/Generator/autogen_baked/Gen.h
+    ../../test/testData/Generator/autogen_baked/Gen.h \
+    autogen_String/String.h \
+    autogen_Gen/Gen.h \
+    ClassTypeTests.h
 
 INCLUDEPATH += \
   ../include/ \
   ../Reflect/include/ \
   ../../test/testData/ \
-  ../../test/testData/Generator \
-  ../../test/testData/StringLibrary \
+  ../../test/testData/StringLibrary/ \
+  ../../test/testData/Generator/ \
   .
 
 macx-clang {
