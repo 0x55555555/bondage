@@ -2,10 +2,26 @@
 #include "ClassTypeTests.h"
 #include "bondage/RuntimeHelpersImpl.h"
 
+Copyable &test_copyable_fn(Copyable &a) { return a; }
+Managed &test_managed_fn(Managed &a) { return a; }
+Unmanaged &test_unmanaged_fn(Unmanaged &a) { return a; }
+Derivable &test_derivable_fn(Derivable &a) { return a; }
+Derived &test_derived_fn(Derived &a) { return a; }
+
+struct test_copyable : Reflect::FunctionCall<Reflect::FunctionSignature< Copyable &(*)(Copyable &) >, &test_copyable_fn, bondage::FunctionCaller> { };
+struct test_managed : Reflect::FunctionCall<Reflect::FunctionSignature< Managed &(*)(Managed &) >, &test_managed_fn, bondage::FunctionCaller> { };
+struct test_unmanaged : Reflect::FunctionCall<Reflect::FunctionSignature< Unmanaged &(*)(Unmanaged &) >, &test_unmanaged_fn, bondage::FunctionCaller> { };
+struct test_derivable : Reflect::FunctionCall<Reflect::FunctionSignature< Derivable &(*)(Derivable &) >, &test_derivable_fn, bondage::FunctionCaller> { };
+struct test_derived : Reflect::FunctionCall<Reflect::FunctionSignature< Derived &(*)(Derived &) >, &test_derived_fn, bondage::FunctionCaller> { };
+
+const bondage::Function test_functions[] = {
+  bondage::FunctionBuilder::build<test_copyable>("test_copyable"),
+};
+
 bondage::Library g_test_lib(
   "Test",
-  nullptr,
-  0);
+  test_functions,
+  sizeof(test_functions)/sizeof(test_functions[0]));
 
 namespace Test
 {
