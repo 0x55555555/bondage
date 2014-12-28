@@ -24,6 +24,12 @@ Boxer::Boxer()
   {
   }
 
+Boxer::~Boxer()
+  {
+  assert(_allocations.empty());
+  assert(_values.empty());
+  }
+
 const Crate::Type *Boxer::getType(VALUE t)
   {
   auto type = TYPE(t);

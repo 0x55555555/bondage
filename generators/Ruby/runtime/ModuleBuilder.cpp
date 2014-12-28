@@ -28,12 +28,26 @@ void buildRubyClass(VALUE &rbLib, const bondage::WrappedClass *cls)
 
   userData.klass = rbCls;
 
+  const bondage::Function *constructor = nullptr;
+
   for (size_t i = 0; i < cls->functionCount(); ++i)
     {
-
     auto &fn = cls->function(i);
 
-    rb_define_method(rbCls, fn.name().data(), (RubyFunction)fn.getCallFunction(), -1);
+    const char *name = fn.name().data();
+    if (fn.name() == cls->type().name())
+      {
+      constructor = &fn;
+      }
+    else
+      {
+      rb_define_method(rbCls, name, (RubyFunction)fn.getCallFunction(), -1);
+      }
+    }
+
+  if (constructor)
+    {
+    rb_define_module_function(rbCls, "new", (RubyFunction)constructor->getCallFunction(), -1);
     }
   }
 

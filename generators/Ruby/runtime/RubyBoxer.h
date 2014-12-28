@@ -2,6 +2,7 @@
 #include "ruby.h"
 #include "Crate/Type.h"
 #include "Crate/Traits.h"
+#include <unordered_map>
 
 namespace bondage
 {
@@ -13,6 +14,7 @@ class Boxer
   {
 public:
   Boxer();
+  ~Boxer();
 
   class Box;
   typedef void (*Cleanup)(Boxer *ifc, Box *data);
@@ -33,7 +35,25 @@ public:
   void *getMemory(Box *t);
 
   template <typename Traits, typename T>
-      typename Traits::InitialiseTypes initialise(VALUE *result, const Crate::Type *type, const T *, Cleanup cleanup)
+      typename Traits::InitialiseTypes initialise(VALUE *result, const Crate::Type *type, const T *t, Cleanup cleanup)
+    {
+    if (!Traits::Managed::value)
+      {
+      createClass<Traits>(result, type, t, cleanup);
+      return Traits::Initialised;
+      }
+
+    auto foundClass = findClass(t, result);
+    if (!foundClass)
+      {
+      createClass<Traits>(result, type, t, cleanup);
+      return Traits::Initialised;
+      }
+
+    return Traits::AlreadyInitialised;
+    }
+
+  template <typename Traits> void createClass(VALUE *result, const Crate::Type *type, const void *t, Cleanup cleanup)
     {
     // the full size is the type size, with alignment, without the extra byte stores in Box.
     void *mem = xmalloc(Traits::TypeSize::value + Traits::TypeAlignment::value - 1);
@@ -41,17 +61,48 @@ public:
 
     *result = Data_Wrap_Struct(type->userData().klass, nullptr, free, box);
 
-    return Traits::Initialised;
-    //return Traits::AlreadyInitialised;
+    if (Traits::Managed::value)
+      {
+      _values[t] = *result;
+      _allocations[mem] = t;
+      }
+    }
+
+  bool findClass(const void *ptr, VALUE *result)
+    {
+    auto fnd = _values.find(ptr);
+    if (fnd != _values.end())
+      {
+      *result = fnd->second;
+      return true;
+      }
+
+    return false;
     }
 
   static void free(void *d)
     {
     Box* b = static_cast<Box*>(d);
+
+    auto inst = instance();
+
+    auto val = inst->_allocations.find(d);
+    if (val != inst->_allocations.end())
+      {
+      instance()->_allocations.erase(d);
+      instance()->_values.erase(val->second);
+      }
+
     b->cleanup(instance(), b);
     }
 
   static Boxer *instance();
+
+private:
+  // map from allocated holders to class instances
+  std::unordered_map<const void *, const void *> _allocations;
+  // map from class instances to values
+  std::unordered_map<const void *, VALUE> _values;
   };
 
 template <typename T> class Caster;

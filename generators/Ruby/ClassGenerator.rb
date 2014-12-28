@@ -41,8 +41,8 @@ module Ruby
 
 #{Script::DocumentationGenerator.new.generateClass('#', '', brief)}
 #
-class #{cls.name}
-#{parentTag}#{pluginTag}#{enumTag}#{functions.join(",\n\n")}
+class #{cls.name}#{parentTag}
+#{pluginTag}#{enumTag}#{functions.join(",\n\n")}
 end
 
 end"
@@ -57,7 +57,7 @@ end"
     def formatParentClass(parent)
       parentRequirePath = @resolver.pathFor(parent)
 
-      return "  super = require \"#{parentRequirePath}\"" + memberSeparator
+      return " < #{parentRequirePath}"
     end
   end
 
