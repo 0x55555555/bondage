@@ -24,7 +24,7 @@ module Script
         res = File.open(path, 'w') do |file|
           file.write(@headerHelper.filePrefix(scriptType) + "\n\n")
           file.write(data)
-          file.write("\n\nreturn #{localName(cls)}")
+          file.write("\n\n" + classFileReturn(cls))
           file.write(@headerHelper.fileSuffix(scriptType) + "\n")
         end
 
@@ -63,8 +63,9 @@ module Script
 
       extraData = []
       requiredClasses = Set.new
-      data = @classes.map{ |cls, idata| generateClassImport(cls) }
+      classes = @classes.map{ |cls, idata| generateClassImport(cls) }
 
+      data = []
       appendEnums(library, exposer, rootNs, data)
       appendFunctions(library, exposer, rootNs, data, extraData, requiredClasses)
 
@@ -75,7 +76,7 @@ module Script
 
       inc = generateRequires(exposer, requiredClasses)
 
-      @library = generateLibrary(inc, extraDatas, @libraryName, data)
+      @library = generateLibrary(inc, extraDatas, @libraryName, classes, data)
     end
 
     def appendEnums(library, exposer, rootNs, data)

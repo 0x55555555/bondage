@@ -15,9 +15,9 @@ module Lua
         lineStart,
         getter,
         resolver)
-      super(classPlugins, classifiers, externalLine, lineStart, getter, resolver)
+      super(classPlugins, classifiers, externalLine, lineStart, resolver)
       @fnGen = Function::Generator.new(classifiers, externalLine, @lineStart, getter)
-      @enumGen = Lua::EnumGenerator.new(@lineStart)
+      @enumGen = EnumGenerator.new(@lineStart)
     end
 
     def setLocalVariableName(var)

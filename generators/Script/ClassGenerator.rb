@@ -12,7 +12,6 @@ module Script
         classifiers,
         externalLine,
         lineStart,
-        getter,
         resolver)
       @lineStart = lineStart
       @plugins = classPlugins

@@ -1,50 +1,49 @@
 require_relative '../Script/LibraryGenerator'
-require_relative "../../exposer/ParsedLibrary.rb"
-require_relative "../GeneratorHelper.rb"
-require_relative "RequireHelper.rb"
-require_relative "ClassGenerator.rb"
+require_relative '../../exposer/ParsedLibrary'
+require_relative '../GeneratorHelper'
+require_relative '../Script/RequireHelper'
+require_relative 'ClassGenerator'
 
-module Lua
+module Ruby
 
   # Generate lua exposing code for C++ classes
   class LibraryGenerator < Script::LibraryGenerator
     # create a lua generator for a [library], and a given [exposer].
-    def initialize(classPlugins, classifiers, getter, resolver, headerHelper)
+    def initialize(classPlugins, classifiers, resolver, headerHelper)
       super(classPlugins, classifiers, resolver, headerHelper)
+      
+      @lineStart = ""
 
-      @getter = getter
-      @clsGen = ClassGenerator.new(classPlugins, classifiers, "", @lineStart, getter, resolver)
-      @fnGen = Function::Generator.new(@classifiers, "", @lineStart, @getter)
+      @clsGen = ClassGenerator.new(classPlugins, classifiers, "", @lineStart, resolver)
+      @fnGen = FunctionGenerator.new(@classifiers, "", @lineStart)
     end
 
     def fileExtension
-      return "lua"
+      return "rb"
     end
 
     def scriptType
-      return :lua
-    end
-
-    def localName(cls)
-      return "#{cls.name}_cls"
+      return :ruby
     end
 
     def classFileReturn(cls)
-      return "return #{localName(cls)}"
+      return ""
     end
 
     def generateRequires(exposer, requiredClasses)
-      return Helper::generateRequires(@pathResolver, exposer, requiredClasses, "class")
+      return Script::Helper::generateRequires(@pathResolver, exposer, requiredClasses) do |cls, path|
+        next 'require \'#path\''
+      end
     end
 
     def generateLibrary(includes, preamble, libraryName, classes, data)
-      contents = (classes + data).join(",\n\n")
+      classContents = classes.join("\n\n")
+      contents = data.join("\n\n")
 
-      @library = "#{includes}#{preamble}local #{@libraryName} = {\n#{contents}\n}\n\nreturn #{@libraryName}"
+      @library = "#{includes}#{preamble}#{classContents}\n\nmodule #{@libraryName}\n#{contents}\n\nend\n"
     end
 
     def generateClass(library, exposer, cls)
-      @clsGen.setLocalVariableName(localName(cls))
       @clsGen.generate(library, exposer, cls)
 
       return @clsGen.classDefinition
@@ -53,14 +52,7 @@ module Lua
     def generateFunction(library, rootNs, fns, requiredClasses)
       @fnGen.generate(library, rootNs, fns, requiredClasses)
 
-      extraData = nil
-      if (@fnGen.wrapper.length > 0)
-        extraData = @fnGen.wrapper
-      end
-
-      data = "#{@fnGen.docs}\n#{@lineStart}#{@fnGen.name} = #{@fnGen.bind}"
-
-      return data, extraData
+      return @fnGen.docs, nil
     end
 
     def generateEnums(library, exposer, rootNs)
