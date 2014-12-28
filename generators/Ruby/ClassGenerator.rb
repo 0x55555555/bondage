@@ -14,7 +14,7 @@ module Ruby
         externalLine,
         lineStart,
         resolver)
-      super(classPlugins, classifiers, externalLine, lineStart, resolver)
+      super(classPlugins, classifiers, externalLine, lineStart + "  ", resolver)
       @fnGen = FunctionGenerator.new(classifiers, externalLine, @lineStart)
       @enumGen = EnumGenerator.new(@lineStart)
     end
@@ -41,9 +41,8 @@ module Ruby
 
 #{Script::DocumentationGenerator.new.generateClass('#', '', brief)}
 #
-class \"#{cls.name}\"
-#{parentTag}#{pluginTag}#{enumTag}
-#{functions.join(",\n\n")}
+class #{cls.name}
+#{parentTag}#{pluginTag}#{enumTag}#{functions.join(",\n\n")}
 end
 
 end"

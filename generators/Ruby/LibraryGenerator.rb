@@ -63,7 +63,7 @@ module Ruby
     end
 
     def generateClassImport(cls)
-      "#{@lineStart}#{cls.name} = require(\"#{@pathResolver.pathFor(cls)}\")"
+      "#{@lineStart}require_relative '#{@pathResolver.pathFor(cls)}'"
     end
   end
 

@@ -5,11 +5,11 @@ module Ruby
   class SignatureGenerator < Script::SignatureGenerator
 
     def staticCallConvention()
-      return "."
+      return "::"
     end
 
     def methodCallConvention()
-      return ":"
+      return "#"
     end
 
     # Format [type], a Type instance, in a way lua users can understand
