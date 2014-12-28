@@ -1,6 +1,6 @@
-require_relative "WrapperGenerator.rb"
-require_relative "SignatureGenerator.rb"
-require_relative "DocumentationGenerator.rb"
+require_relative 'WrapperGenerator'
+require_relative 'SignatureGenerator'
+require_relative '../../Script/DocumentationGenerator'
 
 module Lua
 
@@ -11,6 +11,7 @@ module Lua
         @lineStart = line
         @getter = getter
         @wrapperGenerator = WrapperGenerator.new(classifiers, externalLine, getter)
+        @sigGenerator = Function::SignatureGenerator.new
         reset()
       end
 
@@ -47,7 +48,7 @@ module Lua
           clsName = cls.name
         end
 
-        @docs = DocumentationGenerator.new.generateFunction(@lineStart, @signatures, @brief, @returnComments, @namedArgs)
+        @docs = Script::DocumentationGenerator.new.generateFunction('--', @lineStart, @signatures, @brief, @returnComments, @namedArgs)
 
         # If any classifiers are used, we need to generate a wrapper
         if (@anyClassifiersUsed)
@@ -73,7 +74,7 @@ module Lua
 
         ArgumentVisitor.visitFunction(owner, function, functionIndex, argCount, self)
 
-        @signatures << SignatureGenerator.generate(owner, function, @arguments, @returnTypes)
+        @signatures << @sigGenerator.generate(owner, function, @arguments, @returnTypes)
 
         appendArgumentDataToOverloads(function, @arguments, @returnTypes)
       end

@@ -6,3 +6,4 @@ Makefile
 runtime/build*
 RuntimeTest
 *.pro.user
+moc_*.cpp

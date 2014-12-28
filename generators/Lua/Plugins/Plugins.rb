@@ -1,4 +1,4 @@
-require_relative "Properties.rb"
+require_relative 'Properties'
 
 module Lua
 

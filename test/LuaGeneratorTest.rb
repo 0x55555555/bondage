@@ -57,7 +57,7 @@ class TestGenerator < Test::Unit::TestCase
     cleanLibrary(@named)
     cleanLibrary(@props)
     cleanLibrary(@luaFuncs)
-    #cleanLibrary(@gen)
+    cleanLibrary(@gen)
   end
 
   def test_luaFunctionGenerator
@@ -132,7 +132,7 @@ class TestGenerator < Test::Unit::TestCase
 
     libGen.write(luaPath)
 
-    #cleanLibrary(stringLibrary)
+    cleanLibrary(stringLibrary)
   end
 
   def test_enumTest
@@ -399,7 +399,8 @@ end", fnGen.wrapper
 
     clsGen = Lua::ClassGenerator.new([], Lua::DEFAULT_CLASSIFIERS, "", "", "get", TestPathResolver.new)
 
-    clsGen.generate(lib.library, exposer, clsMetaData, "var")
+    clsGen.setLocalVariableName("var")
+    clsGen.generate(lib.library, exposer, clsMetaData)
 
     assert_equal %{local class = require \"class\"
 
@@ -419,7 +420,8 @@ luaSample = get("LuaFunctions", "TestClass", "luaSample"),
 operatorPork = get("LuaFunctions", "TestClass", "operatorPork")
 }}, clsGen.classDefinition
 
-    clsGen.generate(lib.library, exposer, clsMetaData2, "var")
+    clsGen.setLocalVariableName("var")
+    clsGen.generate(lib.library, exposer, clsMetaData2)
 
     assert_equal %{local class = require \"class\"
 
@@ -493,7 +495,8 @@ luaSample2 = TestClassIndexed_luaSample2_wrapper
     cls2 = clsMetaData.parsed
     assert_not_nil cls2
 
-    clsGen.generate(lib.library, exposer, clsMetaData, "var")
+    clsGen.setLocalVariableName("var")
+    clsGen.generate(lib.library, exposer, clsMetaData)
 
     assert_equal %{local class = require \"class\"
 

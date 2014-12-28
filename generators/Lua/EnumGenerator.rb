@@ -1,37 +1,25 @@
+require_relative '../Script/EnumGenerator'
 
 module Lua
 
   # Generate lua exposing code for C++ enums
-  class EnumGenerator
-    def initialize(lineStart)
-      @lineStart = lineStart
+  class EnumGenerator < Script::EnumGenerator
+
+    def beginEnum()
+      return "{"
     end
 
-    attr_reader :enums
-
-    def reset
-      @enums = []
+    def endEnum()
+      return "}"
     end
 
-    def generate(owner, exposer)
-      reset()
-
-      owner.enums.each do |name, enum|
-        if (name.empty? || 
-          !exposer.allMetaData.isExposedEnum?(enum.fullyQualifiedName))
-          next
-        end
-
-        str = "{\n"
-        enum.members.each do |k, v|
-          str << "#{@lineStart}  #{k} = #{v},\n"
-        end
-        str << "#{@lineStart}}"
-
-        @enums << "#{@lineStart}#{name} = #{str}"
-      end
+    def enumValue(k, v)
+      return "#{k} = #{v},"
     end
 
+    def enumDefinition(name, enum)
+      return "#{name} = #{enum}"
+    end
   end
 
 end
