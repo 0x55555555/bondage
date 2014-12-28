@@ -23,7 +23,7 @@ end
 # preamble helps us set up libclang, and ffi-clang. 
 case os
   when :macosx
-    ENV['LLVM_CONFIG'] = "../../../../../llvm-build/Release+Asserts/bin/llvm-config"
+    ENV['LLVM_CONFIG'] = "../llvm-build/Release+Asserts/bin/llvm-config"
     PLATFORM_INCLUDES = [ "/usr/include/c++/4.2.1/" ]
   when :windows
     ENV["PATH"] = ENV["PATH"] + ";" + "..\\llvmTrunk-build\\Release\\bin"
