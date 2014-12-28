@@ -93,6 +93,12 @@ libGen.write("c:\somedir\")
 
 ```
 
+TODO
+====
+
+A function only file (no classes) doesn't seem to cause an include in C++, causing compile errors.
+Some errors using C++11 interface in MSVC12 (to do with non-copyable classes?)
+
 
 > Written with [StackEdit](https://stackedit.io/).
 

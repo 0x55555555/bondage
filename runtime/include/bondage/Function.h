@@ -1,5 +1,6 @@
 #pragma once
 #include "PackHelper.h"
+#include "assert.h"
 
 namespace bondage
 {
@@ -7,10 +8,8 @@ namespace bondage
 class Function
   {
 public:
-  typedef bondage::Builder::Arguments Arguments;
   typedef bondage::Builder::Call Call;
   typedef bondage::Builder::CanCall CanCall;
-  typedef Arguments *CallData;
 
   Function(const char *name, Call fn)
       : m_function(fn),
