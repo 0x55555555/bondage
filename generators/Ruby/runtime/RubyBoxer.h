@@ -10,21 +10,20 @@ namespace bondage
 namespace Ruby
 {
 
+class Box
+  {
+public:
+  const Crate::Type *type;
+  uint8_t data[1];
+  };
+
 class Boxer
   {
 public:
   Boxer();
   ~Boxer();
 
-  class Box;
-  typedef void (*Cleanup)(Boxer *ifc, Box *data);
-  class Box
-    {
-  public:
-    const Crate::Type *type;
-    Cleanup cleanup;
-    uint8_t data[1];
-    };
+  typedef Crate::TypeUserData::Cleanup Cleanup;
   typedef Box *BoxedData;
 
   Box *unbox(VALUE t);
@@ -53,11 +52,12 @@ public:
     return Traits::AlreadyInitialised;
     }
 
-  template <typename Traits> void createClass(VALUE *result, const Crate::Type *type, const void *t, Cleanup cleanup)
+  template <typename Traits> void createClass(VALUE *result, const Crate::Type *type, const void *t, Cleanup)
     {
     // the full size is the type size, with alignment, without the extra byte stores in Box.
-    void *mem = xmalloc(Traits::TypeSize::value + Traits::TypeAlignment::value - 1);
-    Box *box = new(mem) Box{ type, cleanup, { 0 } };
+    void *mem = xmalloc(sizeof(Box) + Traits::TypeSize::value + Traits::TypeAlignment::value - 1);
+
+    Box *box = new(mem) Box{ type, { 0 } };
 
     *result = Data_Wrap_Struct(type->userData().klass, nullptr, free, box);
 
@@ -93,7 +93,7 @@ public:
       instance()->_values.erase(val->second);
       }
 
-    b->cleanup(instance(), b);
+    b->type->userData().cleanup(instance(), b);
     }
 
   static Boxer *instance();
@@ -105,7 +105,13 @@ private:
   std::unordered_map<const void *, VALUE> _values;
   };
 
+
 template <typename T> class Caster;
 }
 
 }
+
+template <typename T> void Crate::TypeUserData::initialise()
+  {
+  cleanup = Traits<T>::template cleanup<bondage::Ruby::Boxer>;
+  }

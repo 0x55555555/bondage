@@ -104,7 +104,7 @@ void *Boxer::getMemory(Box *t)
   return t->data;
   }
 
-Boxer::Box *Boxer::unbox(VALUE t)
+Box *Boxer::unbox(VALUE t)
   {
   Box *b = nullptr;
   Data_Get_Struct(t, Box, b);
