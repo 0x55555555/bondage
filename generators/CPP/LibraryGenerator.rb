@@ -1,9 +1,9 @@
-require_relative "../../exposer/ParsedLibrary.rb"
-require_relative "../GeneratorHelper.rb"
-require_relative "../../exposer/FunctionVisitor.rb"
+require_relative '../../exposer/ParsedLibrary'
+require_relative '../GeneratorHelper'
+require_relative '../../exposer/FunctionVisitor'
 
-require_relative "FunctionGenerator.rb"
-require_relative "ClassGenerator.rb"
+require_relative 'FunctionGenerator'
+require_relative 'ClassGenerator'
 
 require 'pathname'
 
@@ -22,10 +22,11 @@ module CPP
       attr_reader :literalName, :path, :rootPath, :distance
     end
 
-    def initialize(headerHelper)
+    def initialize(headerHelper, classModes = DefaultClassTypes)
       @header = ""
       @source = ""
       @headerHelper = headerHelper
+      @classModes = classModes
     end
 
     attr_reader :header, :source
@@ -118,7 +119,7 @@ module CPP
     end
 
     def generateClasses(exposer, files, sourceFiles, derivedClasses, library, libraryName)
-      clsGen = ClassGenerator.new
+      clsGen = ClassGenerator.new(@classModes)
 
       classHeaders = []
       classSources = []

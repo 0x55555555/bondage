@@ -174,7 +174,7 @@ public:
     {
     VALUE &b = data->results[data->resultCount++];
 
-    Ruby::Caster<Return>::pack(data->boxer, &b, result);
+    Ruby::Caster<Return>::pack(data->boxer, &b, std::move(result));
     }
 
   template <typename Builder> static Result build()

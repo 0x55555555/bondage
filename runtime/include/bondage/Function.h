@@ -11,9 +11,10 @@ public:
   typedef bondage::Builder::Call Call;
   typedef bondage::Builder::CanCall CanCall;
 
-  Function(const char *name, Call fn)
-      : m_function(fn),
-        m_name(name)
+  Function(const char *name, Call fn, bool st)
+      : m_name(name),
+        m_function(fn),
+        m_static(st)
     {
     assert(m_function);
     }
@@ -23,11 +24,17 @@ public:
     return m_function;
     }
 
+  bool isStatic() const
+    {
+    return m_static;
+    }
+
   const std::string &name() const { return m_name; }
 
 private:
-  Call m_function;
   std::string m_name;
+  Call m_function;
+  bool m_static;
   };
 
 class FunctionCaller : public bondage::Builder

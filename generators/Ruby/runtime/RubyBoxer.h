@@ -42,7 +42,7 @@ public:
       return Traits::Initialised;
       }
 
-    auto foundClass = findClass(t, result);
+    auto foundClass = findClass<Traits>(t, result);
     if (!foundClass)
       {
       createClass<Traits>(result, type, t, cleanup);
@@ -52,7 +52,8 @@ public:
     return Traits::AlreadyInitialised;
     }
 
-  template <typename Traits> void createClass(VALUE *result, const Crate::Type *type, const void *t, Cleanup)
+  template <typename Traits, typename T>
+      void createClass(VALUE *result, const Crate::Type *type, const T *t, Cleanup)
     {
     // the full size is the type size, with alignment, without the extra byte stores in Box.
     void *mem = xmalloc(sizeof(Box) + Traits::TypeSize::value + Traits::TypeAlignment::value - 1);
@@ -63,14 +64,15 @@ public:
 
     if (Traits::Managed::value)
       {
-      _values[t] = *result;
-      _allocations[mem] = t;
+      auto key = Traits::makeObjectKey(t);
+      _values[key] = *result;
+      _allocations[mem] = key;
       }
     }
 
-  bool findClass(const void *ptr, VALUE *result)
+  template <typename Traits, typename T> bool findClass(const T *ptr, VALUE *result)
     {
-    auto fnd = _values.find(ptr);
+    auto fnd = _values.find(Traits::makeObjectKey(ptr));
     if (fnd != _values.end())
       {
       *result = fnd->second;

@@ -28,7 +28,7 @@ void buildRubyClass(VALUE &rbLib, const bondage::WrappedClass *cls)
 
   userData.klass = rbCls;
 
-  const bondage::Function *constructor = nullptr;
+  bool hasConstructor = false;
 
   for (size_t i = 0; i < cls->functionCount(); ++i)
     {
@@ -37,7 +37,13 @@ void buildRubyClass(VALUE &rbLib, const bondage::WrappedClass *cls)
     const char *name = fn.name().data();
     if (fn.name() == cls->type().name())
       {
-      constructor = &fn;
+      name = "new";
+      hasConstructor = true;
+      }
+
+    if (fn.isStatic())
+      {
+      rb_define_singleton_method(rbCls, name, (RubyFunction)fn.getCallFunction(), -1);
       }
     else
       {
@@ -45,9 +51,18 @@ void buildRubyClass(VALUE &rbLib, const bondage::WrappedClass *cls)
       }
     }
 
-  if (constructor)
+  if (!hasConstructor)
     {
-    rb_define_module_function(rbCls, "new", (RubyFunction)constructor->getCallFunction(), -1);
+    struct Utils
+      {
+      static VALUE error(...)
+        {
+        rb_raise(rb_eRuntimeError, "Invalid constructor called.");
+        return Qnil;
+        }
+      };
+
+    rb_define_singleton_method(rbCls, "new", &Utils::error, -1);
     }
   }
 

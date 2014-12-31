@@ -60,7 +60,7 @@ template <> class Caster<bool> : public SimpleCaster<bool, canCastBool, toBool, 
 template <typename T> class Caster<T*>
   {
 public:
-  typedef T *Result;
+  typedef typename Crate::Traits<T>::UnboxResult Result;
 
   static bool canCast(Boxer *b, VALUE val)
     {
@@ -103,9 +103,14 @@ public:
       throw Crate::TypeException(b->getType(val), Crate::findType<T>());
       }
 
-    return t;
+    return *t;
     }
-
+    
+  static void pack(Boxer *box, VALUE *v, T &&result)
+    {
+    Caster<T*>::pack(box, v, &result);
+    }
+    
   static void pack(Boxer *box, VALUE *v, T &result)
     {
     Caster<T*>::pack(box, v, &result);

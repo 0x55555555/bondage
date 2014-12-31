@@ -24,6 +24,7 @@ module Ruby
     end
 
     def generate(library, cls, fns, requiredClasses)
+      reset()
       
       FunctionVisitor.visit(cls, fns, self)
 

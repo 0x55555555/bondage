@@ -197,7 +197,7 @@ module Parser
       end
 
       templateArgCount.times do |i|
-        t = templateArg[i]
+        t = templateArg(i)
         t.getRequiredTypes(types)
       end
     end

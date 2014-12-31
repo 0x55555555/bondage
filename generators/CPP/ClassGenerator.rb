@@ -1,11 +1,13 @@
-require_relative "FunctionGenerator.rb"
+require_relative 'FunctionGenerator'
+require_relative 'ExposureTypes/Types'
 
 module CPP
 
   # Generate exposures for classes
   class ClassGenerator
-    def initialize()
+    def initialize(modes = DefaultClassTypes)
       reset()
+      @modes = modes
     end
 
     attr_reader :interface, :implementation, :wrapperName
@@ -26,11 +28,17 @@ module CPP
 
       @exposer = exposer
 
+      type = classMode()
+      validation, err = type.validate(@metaData)
+      if (!validation)
+        raise "Invalid class mode: #{err}"
+      end
+
       if md.fullyExposed
-        generateHeader()
-        generateSource(libraryVariable, files)
+        generateHeader(type)
+        generateSource(type, libraryVariable, files)
       else
-        generatePartial()
+        generatePartial(type)
       end
     end
 
@@ -53,35 +61,24 @@ module CPP
     end
 
   private
-    def generatePartial()
-      clsPath = @cls.fullyQualifiedName
+    def generatePartial(type)
       raise "partial class without parent #{clsPath}" unless @metaData.hasParentClass()
 
-      parent = @metaData.parentClass
       root, dist = findRootClass(@metaData)
       dist = nil
-      @interface = "#{MACRO_PREFIX}EXPOSED_DERIVED_PARTIAL_CLASS(#{@metaData.library.exportMacro}, #{clsPath}, #{parent}, #{root})"
+      @interface = type.generateHeader(:partial, @metaData, root)
     end
 
-    def generateHeader()
-      clsPath = @cls.fullyQualifiedName
-      type = classMode()
-      if(!@metaData.hasParentClass())
-        derivable = ""
-        if (@metaData.isDerivable)
-          derivable = "DERIVABLE_"
-        end
-        @interface = "#{MACRO_PREFIX}EXPOSED_CLASS_#{derivable}#{type}(#{@metaData.library.exportMacro}, #{clsPath})"
-      else
-        parent = @metaData.parentClass
+    def generateHeader(type)
+      root = nil
+      if(@metaData.hasParentClass())
         root, dist = findRootClass(@metaData)
-        dist = nil
-        @interface = "#{MACRO_PREFIX}EXPOSED_CLASS_DERIVED_#{type}(#{@metaData.library.exportMacro}, #{clsPath}, #{parent}, #{root})"
       end
+      @interface = type.generateHeader(:full, @metaData, root)
     end
 
     # Generate binding data for a class
-    def generateSource(libraryVariable, files)
+    def generateSource(type, libraryVariable, files)
       # find a name that is a valid literal in c++ used for static definitions
       fullyQualified = @cls.fullyQualifiedName()
       @wrapperName = fullyQualified.sub("::", "").gsub("::", "_")
@@ -92,16 +89,13 @@ module CPP
 
       parent = @metaData.parentClass
 
-      classInfo =
-"#{MACRO_PREFIX}IMPLEMENT_EXPOSED_CLASS(
-  #{wrapperName},
-  #{libraryVariable},
-  #{@cls.parent.fullyQualifiedName()},
-  #{@cls.name},
-  #{parent ? parent : "void"},
-  #{methodsLiteral},
-  #{methods.length});"
-
+      classInfo = type.generateSource(
+        @wrapperName,
+        libraryVariable,
+        @cls,
+        parent,
+        methodsLiteral,
+        methods)
 
       @implementation =
 "// Exposing class #{fullyQualified}#{extraMethodSource}#{methodsArray}
@@ -109,13 +103,11 @@ module CPP
 "
     end
 
-    CLASS_MODES = [ :copyable, :managed, :unmanaged ]
-
     def classMode
       cmd = @cls.comment.command("expose")
 
       mode = :default
-      CLASS_MODES.each do |possMode|
+      @modes.each do |possMode, factory|
         str = possMode.to_s
         if (cmd.hasArg(str))
           raise "'Multiple class management modes specified #{mode.to_s} and '#{str}'." if mode != :default
@@ -123,19 +115,7 @@ module CPP
         end
       end
 
-      if (mode == :default)
-        if (!@metaData.hasParentClass())
-          mode = :copyable
-        else
-          mode = :managed
-        end
-      end
-
-      if (@cls.hasPureVirtualFunctions && mode == :copyable)
-        raise "Abstract class #{@cls.name} can not be copyable"
-      end
-
-      return mode.to_s.upcase
+      return @modes[mode]
     end
   end
 end

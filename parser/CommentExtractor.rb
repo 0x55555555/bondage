@@ -2,13 +2,10 @@ require "set"
 
 module Parser
 
+  All = Set.new()
+
   EXTRA_COMMAND_TYPES = {
-    "expose" => Set.new([
-      "derivable",
-      "copyable",
-      "managed",
-      "unmanaged"
-    ]),
+    "expose" => All,
     "property" => nil,
   }
 
@@ -65,7 +62,7 @@ module Parser
 
       options = match.captures[0].split
 
-      if (allowedOpts)
+      if (allowedOpts && allowedOpts.object_id != All.object_id)
         options.each do |flag|
           if (!allowedOpts.include?(flag))
             comment_error(location, "Invalid flag to command #{cmd} - #{flag}")

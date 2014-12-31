@@ -42,7 +42,7 @@ module Ruby
 #{Script::DocumentationGenerator.new.generateClass('#', '', brief)}
 #
 class #{cls.name}#{parentTag}
-#{pluginTag}#{enumTag}#{functions.join(",\n\n")}
+#{pluginTag}#{enumTag}#{functions.join("\n\n")}
 end
 
 end"
