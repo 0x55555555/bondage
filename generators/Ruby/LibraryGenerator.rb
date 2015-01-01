@@ -37,7 +37,7 @@ module Ruby
     end
 
     def generateLibrary(includes, preamble, libraryName, classes, data)
-      classContents = classes.join("\n\n")
+      classContents = classes.join("\n")
       contents = data.join("\n\n")
 
       @library = "#{includes}#{preamble}#{classContents}\n\nmodule #{@libraryName}\n#{contents}\n\nend\n"
