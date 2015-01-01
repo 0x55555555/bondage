@@ -1,4 +1,5 @@
 #pragma once
+#include "bondage/Bondage.h"
 #include "PackHelper.h"
 #include "Crate/Traits.h"
 

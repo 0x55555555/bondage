@@ -1,5 +1,4 @@
 #include "bondage/Library.h"
-#include <cassert>
 
 namespace bondage
 {
@@ -22,7 +21,7 @@ void Library::registerClass(WrappedClass *cls)
   auto lst = m_last;
   m_last = cls;
 
-  assert(lst);
+  REFLECT_ASSERT(lst);
   lst->setNext(m_last);
   }
 
@@ -49,7 +48,7 @@ bool ClassWalker::iterator::operator!=(const iterator &i) const
 
 ClassWalker::iterator& ClassWalker::iterator::operator++()
   {
-  assert(m_cls);
+  REFLECT_ASSERT(m_cls);
   m_cls = m_cls->next();
   return *this;
   }

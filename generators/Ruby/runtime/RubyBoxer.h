@@ -31,6 +31,7 @@ public:
   const Crate::Type *getType(VALUE t);
   const Crate::Type *getType(Box *t);
   void *getMemory(VALUE *t);
+  void *getMemory(VALUE t);
   void *getMemory(Box *t);
 
   template <typename Traits, typename T>

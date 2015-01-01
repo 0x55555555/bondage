@@ -21,7 +21,7 @@ void buildRubyClass(VALUE &rbLib, const bondage::WrappedClass *cls)
       buildRubyClass(rbLib, cls);
       }
     superRbCls = rbData.klass;
-    assert(superRbCls);
+    REFLECT_ASSERT(superRbCls);
     }
 
   VALUE rbCls = rb_define_class_under(rbLib, cls->type().name().data(), superRbCls);

@@ -1,6 +1,5 @@
 #include "bondage/WrappedClass.h"
 #include "bondage/Library.h"
-#include <cassert>
 
 namespace bondage
 {
@@ -11,7 +10,7 @@ WrappedClass::WrappedClass(Library &owningLib, const Crate::Type *type, const Fu
       m_functionCount(count),
       m_next(nullptr)
   {
-  assert(type);
+  REFLECT_ASSERT(type);
   owningLib.registerClass(this);
   }
 
@@ -22,7 +21,7 @@ const Crate::Type &WrappedClass::type() const
 
 void WrappedClass::setNext(WrappedClass *cls)
   {
-  assert(!m_next);
+  REFLECT_ASSERT(!m_next);
   m_next = cls;
   }
 

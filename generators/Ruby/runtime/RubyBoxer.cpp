@@ -1,6 +1,6 @@
+#include "bondage/Bondage.h"
 #include "RubyBoxer.h"
 #include "Crate/EmbeddedTypes.h"
-#include "assert.h"
 
 #define DUMMY_TYPE(type, name) \
   template <> struct Crate::detail::TypeResolver<type> { \
@@ -26,8 +26,8 @@ Boxer::Boxer()
 
 Boxer::~Boxer()
   {
-  assert(_allocations.empty());
-  assert(_values.empty());
+  REFLECT_ASSERT(_allocations.empty());
+  REFLECT_ASSERT(_values.empty());
   }
 
 const Crate::Type *Boxer::getType(VALUE t)
@@ -90,13 +90,18 @@ const Crate::Type *Boxer::getType(VALUE t)
 
 const Crate::Type *Boxer::getType(Box *t)
   {
-  assert(t);
+  REFLECT_ASSERT(t);
   return t->type;
   }
 
 void *Boxer::getMemory(VALUE *t)
   {
   return getMemory(unbox(*t));
+  }
+
+void *Boxer::getMemory(VALUE t)
+  {
+  return getMemory(unbox(t));
   }
 
 void *Boxer::getMemory(Box *t)

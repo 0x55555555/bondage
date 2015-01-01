@@ -17,3 +17,7 @@
 # define BONDAGE_BEGIN_WARNING_SCOPE
 # define BONDAGE_END_WARNING_SCOPE
 #endif
+
+#ifdef BONDAGE_HELPER
+# include "BondageHelper.h"
+#endif

@@ -1,6 +1,5 @@
 #pragma once
 #include "PackHelper.h"
-#include "assert.h"
 
 namespace bondage
 {
@@ -16,7 +15,7 @@ public:
         m_function(fn),
         m_static(st)
     {
-    assert(m_function);
+    REFLECT_ASSERT(m_function);
     }
 
   Call getCallFunction() const
