@@ -1,5 +1,5 @@
-require_relative "IndexClassifier.rb"
-require_relative "NamedClassifier.rb"
+require_relative 'IndexClassifier'
+require_relative 'NamedClassifier'
 
 module Lua
 

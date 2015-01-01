@@ -43,8 +43,10 @@ inline float toFloat(VALUE v) { return (float)toDouble(v); }
 
 inline VALUE fromLong(long i) { return LONG2FIX(i); }
 inline VALUE fromInt(int i) { return INT2FIX(i); }
+inline VALUE fromSizeT(size_t i) { return ULL2NUM(i); }
 inline long toLong(VALUE v) { if (RB_TYPE_P(v, T_FIXNUM)) { return FIX2LONG(v); } return (long)DBL2NUM(v); }
 inline int toInt(VALUE v) { return (int)toLong(v); }
+inline size_t toSizeT(VALUE v) { return (size_t)toLong(v); }
 
 inline bool canCastBool(VALUE v) { auto type = TYPE(v); return type == T_TRUE || type == T_FALSE; }
 inline VALUE fromBool(bool i) { return i ? Qtrue : Qfalse; }
@@ -53,6 +55,7 @@ inline bool toBool(VALUE v) { return RTEST(v); }
 
 template <> class Caster<int> : public SimpleCaster<int, canCastNumber, toInt, fromInt> { };
 template <> class Caster<long> : public SimpleCaster<long, canCastNumber, toLong, fromLong> { };
+template <> class Caster<size_t> : public SimpleCaster<size_t, canCastNumber, toSizeT, fromSizeT> { };
 template <> class Caster<float> : public SimpleCaster<float, canCastNumber, toFloat, fromFloat> { };
 template <> class Caster<double> : public SimpleCaster<double, canCastNumber, toDouble, fromDouble> { };
 template <> class Caster<bool> : public SimpleCaster<bool, canCastBool, toBool, fromBool> { };
@@ -87,6 +90,17 @@ public:
 
     Crate::Traits<T>::box(box, v, result);
     }
+
+  static void pack(Boxer *box, VALUE *v, const T *result)
+    {
+    if (!result)
+      {
+      *v = Qnil;
+      return;
+      }
+
+    Crate::Traits<T>::box(box, v, result);
+    }
   };
 
 
@@ -110,8 +124,13 @@ public:
     {
     Caster<T*>::pack(box, v, &result);
     }
-    
+
   static void pack(Boxer *box, VALUE *v, T &result)
+    {
+    Caster<T*>::pack(box, v, &result);
+    }
+
+  static void pack(Boxer *box, VALUE *v, const T &result)
     {
     Caster<T*>::pack(box, v, &result);
     }

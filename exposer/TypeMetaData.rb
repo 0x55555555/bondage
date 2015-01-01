@@ -1,5 +1,5 @@
-require_relative "ParsedLibrary.rb"
-require "json"
+require_relative 'ParsedLibrary'
+require 'json'
 
 # A serialisable class which is exposed in a library.
 # Allows querying data of types from other libraries, not parsed in the current operation.

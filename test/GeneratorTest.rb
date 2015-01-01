@@ -1,9 +1,9 @@
-require_relative 'TestUtils.rb'
+require_relative 'TestUtils'
 
-require_relative "../parser/Library.rb"
-require_relative "../parser/Parser.rb"
-require_relative "../exposer/ParsedLibrary.rb"
-require_relative "../generators/CPP/LibraryGenerator.rb"
+require_relative '../parser/Library'
+require_relative '../parser/Parser'
+require_relative '../exposer/ParsedLibrary'
+require_relative '../generators/CPP/LibraryGenerator'
 
 require 'test/unit'
 

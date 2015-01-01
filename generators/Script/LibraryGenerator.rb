@@ -1,7 +1,7 @@
-require_relative "../../exposer/ParsedLibrary.rb"
-require_relative "../GeneratorHelper.rb"
-require_relative "RequireHelper.rb"
-require_relative "ClassGenerator.rb"
+require_relative '../../exposer/ParsedLibrary'
+require_relative '../GeneratorHelper'
+require_relative 'RequireHelper'
+require_relative 'ClassGenerator'
 
 module Script
 

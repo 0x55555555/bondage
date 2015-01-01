@@ -1,4 +1,4 @@
-require_relative "ArgumentItem.rb"
+require_relative 'ArgumentItem'
 
 module AST
   

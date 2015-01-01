@@ -1,5 +1,5 @@
-require_relative "../GeneratorHelper.rb"
-require_relative "FunctionWrapperGenerator.rb"
+require_relative '../GeneratorHelper'
+require_relative 'FunctionWrapperGenerator'
 
 module CPP
 

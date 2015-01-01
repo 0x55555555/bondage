@@ -1,8 +1,8 @@
-require_relative "ParsedLibrary.rb"
-require_relative "TypeMetaData.rb"
-require_relative "TypeExposer.rb"
-require_relative "FunctionExposer.rb"
-require "set"
+require_relative 'ParsedLibrary'
+require_relative 'TypeMetaData'
+require_relative 'TypeExposer'
+require_relative 'FunctionExposer'
+require 'set'
 
 # Decides what classes and functions can be exposed, using data from the current parse, and dependency parses.
 class ClassExposer

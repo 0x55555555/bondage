@@ -1,5 +1,5 @@
-require_relative "HierarchyItem.rb"
-require_relative "FunctionItem.rb"
+require_relative 'HierarchyItem'
+require_relative 'FunctionItem'
 
 module AST
 

@@ -1,7 +1,4 @@
 require_relative '../../exposer/ParsedLibrary'
-#require_relative 'Function/Generator'
-#require_relative 'RequireHelper'
-#require_relative 'EnumGenerator'
 
 module Script
 

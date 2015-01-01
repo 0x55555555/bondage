@@ -1,4 +1,4 @@
-require_relative "HierarchyItem.rb"
+require_relative 'HierarchyItem'
 
 module AST
   

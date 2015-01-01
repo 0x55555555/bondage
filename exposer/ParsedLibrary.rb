@@ -1,15 +1,15 @@
 # The expose AST is a hierarchy of classes produced from visiting the Clang AST.
 # The expose AST groups data (and comments) in ways more useful when exposing later.
 #
-require_relative "AST/ArgumentItem.rb"
-require_relative "AST/ClassableItem.rb"
-require_relative "AST/ClassItem.rb"
-require_relative "AST/EnumItem.rb"
-require_relative "AST/FunctionItem.rb"
-require_relative "AST/HierarchyItem.rb"
-require_relative "AST/NamespaceItem.rb"
+require_relative 'AST/ArgumentItem'
+require_relative 'AST/ClassableItem'
+require_relative 'AST/ClassItem'
+require_relative 'AST/EnumItem'
+require_relative 'AST/FunctionItem'
+require_relative 'AST/HierarchyItem'
+require_relative 'AST/NamespaceItem'
 
-require_relative "../parser/Parser.rb"
+require_relative '../parser/Parser'
 
 
 # ExposeAstVisitor implements the Parsers Visitor interface

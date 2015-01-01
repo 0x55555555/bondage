@@ -1,4 +1,4 @@
-require_relative "ClassableItem.rb"
+require_relative 'ClassableItem'
 
 module AST
 
