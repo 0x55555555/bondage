@@ -48,6 +48,16 @@ module Parser
       return @canonical.kind == :type_bool
     end
 
+    # find if the type is a function prototype
+    def isFunctionPrototype
+      return @canonical.kind == :type_function_proto
+    end
+
+    # find if the type is a record (class/struct/union etc)
+    def isRecord
+      return @canonical.kind == :type_record
+    end
+
     # find if the type is a const char* or a const wchar_t*
     def isStringLiteral
       if(!isPointer())
@@ -198,7 +208,10 @@ module Parser
 
       templateArgCount.times do |i|
         t = templateArg(i)
-        t.getRequiredTypes(types)
+
+        if (t.isRecord)
+          t.getRequiredTypes(types)
+        end
       end
     end
 

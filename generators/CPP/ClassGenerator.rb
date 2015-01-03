@@ -109,7 +109,7 @@ module CPP
       mode = :default
       @modes.each do |possMode, factory|
         str = possMode.to_s
-        if (cmd.hasArg(str))
+        if (cmd != nil && cmd.hasArg(str))
           raise "'Multiple class management modes specified #{mode.to_s} and '#{str}'." if mode != :default
           mode = possMode
         end

@@ -30,7 +30,6 @@ public:
     Boxer *boxer;
     };
   typedef CallArgs *CallData;
-  typedef std::integral_constant<bool, false> ForceMember;
 
 
   struct Result
@@ -185,7 +184,7 @@ public:
 
   template <typename Function, typename Builder> static VALUE wrapCall(int count, VALUE *args, VALUE ths)
     {
-    const size_t thisAdjust = Function::Helper::Static::value ? 0 : 1; // Ruby always passes some kind of self
+    const size_t thisAdjust = Builder::template Helper<Function>::Static::value ? 0 : 1; // Ruby always passes some kind of self
     CallArgs data = { thisAdjust, args, (size_t)count, ths, { }, 0, Boxer::instance() };
     try
       {
@@ -210,7 +209,7 @@ public:
 
   template <typename Function, typename Builder> static bool wrapCanCall(int count, VALUE *args, VALUE ths)
     {
-    const size_t thisAdjust = Function::Helper::Static::value ? 0 : 1; // Ruby always passes some kind of self
+    const size_t thisAdjust = Builder::template Static<Function>::value ? 0 : 1; // Ruby always passes some kind of self
     CallArgs data = { thisAdjust, args, (size_t)count, ths, { }, 0, Boxer::instance() };
     return Function::template canCall<Builder>(&data);
     }

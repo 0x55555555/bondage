@@ -42,6 +42,13 @@ public:
   typedef Function::Call Result;
   typedef Function::CanCall CanCallResult;
 
+  template <typename T> struct Helper
+    {
+    typedef typename T::Helper WrappedHelper;
+    typedef typename WrappedHelper::ArgumentCount ArgumentCount;
+    typedef typename WrappedHelper::Static Static;
+    };
+
   template <typename Function, typename Builder> static Result buildWrappedCall()
     {
     return wrapCall<Function, Builder>;

@@ -61,7 +61,7 @@ template <> class Caster<float> : public SimpleCaster<float, canCastNumber, toFl
 template <> class Caster<double> : public SimpleCaster<double, canCastNumber, toDouble, fromDouble> { };
 template <> class Caster<bool> : public SimpleCaster<bool, canCastBool, toBool, fromBool> { };
 
-template <typename T> class Caster<T*>
+template <typename T> class PointerCaster
   {
 public:
   typedef typename Crate::Traits<T>::UnboxResult Result;
@@ -104,6 +104,8 @@ public:
     }
   };
 
+template <typename T> class Caster<T*> : public PointerCaster<T> { };
+
 
 template <typename T> class Caster<T&> : public Caster<T*>
   {
@@ -141,6 +143,35 @@ template <typename T> class Caster<const T *> : public Caster<T *> { };
 template <typename T> class Caster<const T &> : public Caster<T &> { };
 template <typename T> class Caster : public Caster<const T &> { };
 
+template <typename T> class Caster<std::shared_ptr<T>*> : public PointerCaster<std::shared_ptr<T>>
+  {
+public:
+  static void pack(Boxer *box, VALUE *v, const std::shared_ptr<T> *result)
+    {
+    if (!result || !result->get())
+      {
+      *v = Qnil;
+      return;
+      }
+
+    Crate::Traits<std::shared_ptr<T>>::box(box, v, result);
+    }
+  };
+
+template <typename T> class Caster<std::unique_ptr<T>> : public PointerCaster<std::unique_ptr<T>>
+  {
+public:
+  static void pack(Boxer *box, VALUE *v, std::unique_ptr<T> *result)
+    {
+    if (!result || !result->get())
+      {
+      *v = Qnil;
+      return;
+      }
+
+    Crate::Traits<std::unique_ptr<T>>::box(box, v, result);
+    }
+  };
 }
 
 }

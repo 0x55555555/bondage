@@ -1,4 +1,5 @@
 #pragma once
+#include "bondage/Bondage.h"
 #include "Crate/Traits.h"
 #include "bondage/Library.h"
 #include "bondage/CastHelper.h"

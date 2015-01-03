@@ -55,9 +55,7 @@ end"
     end
 
     def formatParentClass(parent)
-      parentRequirePath = @resolver.pathFor(parent)
-
-      return " < #{parentRequirePath}"
+      return " < #{parent.library.name}::#{parent.name}"
     end
   end
 

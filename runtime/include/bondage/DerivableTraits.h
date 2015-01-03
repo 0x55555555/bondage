@@ -33,7 +33,7 @@ namespace Crate
     delete mem;
     }
 
-  template<typename Box> static void box(Box *ifc, typename Box::BoxedData data, T *dataIn)
+  template<typename Box, typename Data> static void box(Box *ifc, Data data, T *dataIn)
     {
     auto& helper = bondage::WrappedClassFinder<T>::castHelper();
     const bondage::WrappedClass* wrapper = helper.search(dataIn);

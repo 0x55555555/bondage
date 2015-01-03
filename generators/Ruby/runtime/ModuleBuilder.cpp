@@ -18,7 +18,8 @@ void buildRubyClass(VALUE &rbLib, const bondage::WrappedClass *cls)
     auto &rbData = parent->userData();
     if (!rbData.isInitialised())
       {
-      buildRubyClass(rbLib, cls);
+      xAssertFail();
+      //buildRubyClass(rbLib, parent);
       }
     superRbCls = rbData.klass;
     REFLECT_ASSERT(superRbCls);

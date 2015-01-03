@@ -54,7 +54,7 @@ const Crate::Type *Boxer::getType(VALUE t)
     {
     return Crate::findType<bool>();
     }
-  else if(type == T_DATA)
+  else if(type == T_DATA && !RTYPEDDATA_P(t))
     {
     Box *b = unbox(t);
     return getType(b);

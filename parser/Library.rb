@@ -75,7 +75,10 @@ module Parser
 
     # find an array of all the include paths this library requires, including its dependent library include paths.
     def includePaths
-      localPaths = @includePaths.map{ |path| root + "/" + path + "/" }
+      localPaths = @includePaths.map do |path| 
+        pathname = Pathname(path)
+        next pathname.absolute? ? path : root + "/" + path + "/"
+      end
       externalPaths = @dependencies.map{ |dep| dep.includePaths }.reduce([]) { |sum, obj| sum + obj }
 
       allPaths = (localPaths + externalPaths).uniq
