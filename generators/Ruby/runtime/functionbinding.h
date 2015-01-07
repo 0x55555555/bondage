@@ -163,10 +163,19 @@ private:
     CallArguments *args = (CallArguments*)data;
 
     VALUE problem = rb_funcall2(exception_object, rb_intern("message"), 0, 0);
+    VALUE backtrace = rb_funcall2(exception_object, rb_intern("backtrace"), 0, 0);
     std::string problemStr(RSTRING_PTR(problem), RSTRING_LEN(problem));
 
+    std::string backtraceStr;
+    for (int i = 0; i < RARRAY_LEN(backtrace); ++i)
+      {
+      VALUE el = RARRAY_PTR(backtrace)[i];
+      std::string frame(RSTRING_PTR(el), RSTRING_LEN(el));
+      backtraceStr += frame + "\n";
+      }
+
     args->threw = true;
-    args->exception = Reflect::CallbackException(std::string(rb_obj_classname(exception_object)) + ": " + problemStr);
+    args->exception = Reflect::CallbackException(std::string(rb_obj_classname(exception_object)) + ": " + problemStr + "\n" + backtraceStr);
     return Qnil;
     }
 

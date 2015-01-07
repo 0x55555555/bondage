@@ -1,4 +1,4 @@
-#pragma once
+  #pragma once
 #include "ruby.h"
 #include "Crate/Type.h"
 #include "Crate/Traits.h"
@@ -68,6 +68,7 @@ public:
       auto key = Traits::makeObjectKey(t);
       _values[key] = *result;
       _allocations[mem] = key;
+      REFLECT_ASSERT(_allocations.size() == _values.size());
       }
     }
 
@@ -92,12 +93,19 @@ public:
     auto val = inst->_allocations.find(d);
     if (val != inst->_allocations.end())
       {
+      REFLECT_ASSERT(instance()->_allocations.size() == instance()->_values.size());
+      REFLECT_ASSERT(instance()->_allocations.find(d) != instance()->_allocations.end());
+      REFLECT_ASSERT(instance()->_values.find(val->second) != instance()->_values.end());
       instance()->_allocations.erase(d);
       instance()->_values.erase(val->second);
+      REFLECT_ASSERT(instance()->_allocations.size() == instance()->_values.size());
       }
 
     b->type->userData().cleanup(instance(), b);
     }
+
+  int unboxEnum(VALUE v);
+  void boxEnum(VALUE *v, int enumVal);
 
   static Boxer *instance();
 

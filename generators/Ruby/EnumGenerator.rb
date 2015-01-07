@@ -14,11 +14,11 @@ module Ruby
     end
 
     def enumValue(k, v)
-      return "#{k} = #{v},"
+      return ":#{k} => #{v},"
     end
 
     def enumDefinition(name, enum)
-      return "#{name} = #{enum}"
+      return "#{name} = Enum.new(#{enum})"
     end
   end
 

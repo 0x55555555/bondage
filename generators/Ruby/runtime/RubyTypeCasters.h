@@ -78,7 +78,7 @@ public:
       throw Crate::TypeException(Crate::findType<T>(), b->getType(val));
       }
 
-    return Crate::Traits<T>::unbox(b, b->unbox(val));
+    return Crate::Traits<T>::unbox(b, val);
     }
 
   static void pack(Boxer *box, VALUE *v, T *result)
@@ -110,7 +110,7 @@ template <typename T> class Caster<T*> : public PointerCaster<T> { };
 template <typename T> class Caster<T&> : public Caster<T*>
   {
 public:
-  typedef T &Result;
+  typedef decltype(*std::declval<typename Crate::Traits<T>::UnboxResult>()) Result;
 
   static Result cast(Boxer *b, VALUE val)
     {
@@ -172,6 +172,17 @@ public:
     Crate::Traits<std::unique_ptr<T>>::box(box, v, result);
     }
   };
+
+inline void Boxer::boxEnum(VALUE *v, int enumVal)
+  {
+  Ruby::Caster<int>::pack(bondage::Builder::Boxer::instance(), v, enumVal);
+  }
+
+inline int Boxer::unboxEnum(VALUE v)
+  {
+  return Ruby::Caster<int>::cast(bondage::Builder::Boxer::instance(), v);
+  }
+
 }
 
 }

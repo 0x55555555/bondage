@@ -26,6 +26,7 @@ Boxer::Boxer()
 
 Boxer::~Boxer()
   {
+  REFLECT_ASSERT(_allocations.size() == _values.size());
   REFLECT_ASSERT(_allocations.empty());
   REFLECT_ASSERT(_values.empty());
   }
@@ -68,6 +69,7 @@ const Crate::Type *Boxer::getType(VALUE t)
     return Crate::findType<DummyUnknown>();
     }
 
+/*
 #define T_OBJECT RUBY_T_OBJECT
 #define T_CLASS  RUBY_T_CLASS
 #define T_ICLASS RUBY_T_ICLASS
@@ -84,6 +86,7 @@ const Crate::Type *Boxer::getType(VALUE t)
 #define T_NODE   RUBY_T_NODE
 #define T_ZOMBIE RUBY_T_ZOMBIE
 #define T_MASK   RUBY_T_MASK
+*/
 
   return nullptr;
   }
