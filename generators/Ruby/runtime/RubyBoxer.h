@@ -96,8 +96,8 @@ public:
       REFLECT_ASSERT(instance()->_allocations.size() == instance()->_values.size());
       REFLECT_ASSERT(instance()->_allocations.find(d) != instance()->_allocations.end());
       REFLECT_ASSERT(instance()->_values.find(val->second) != instance()->_values.end());
-      instance()->_allocations.erase(d);
       instance()->_values.erase(val->second);
+      instance()->_allocations.erase(d);
       REFLECT_ASSERT(instance()->_allocations.size() == instance()->_values.size());
       }
 
