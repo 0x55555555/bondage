@@ -183,6 +183,11 @@ inline int Boxer::unboxEnum(VALUE v)
   return Ruby::Caster<int>::cast(bondage::Builder::Boxer::instance(), v);
   }
 
+inline int Boxer::canUnboxEnum(VALUE v)
+  {
+  return canCastNumber(v);
+  }
+
 }
 
 }

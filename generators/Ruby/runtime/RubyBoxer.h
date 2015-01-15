@@ -106,6 +106,7 @@ public:
 
   int unboxEnum(VALUE v);
   void boxEnum(VALUE *v, int enumVal);
+  int canUnboxEnum(VALUE v);
 
   static Boxer *instance();
 

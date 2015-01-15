@@ -119,11 +119,11 @@ public:
     return args->argCount + args->thisAdjust;
     }
 
-  template <typename T> static T unpackThis(CallData args)
+  template <typename Arg> static typename Ruby::Caster<Arg>::Result unpackThis(CallData args)
     {
     try
       {
-      return Ruby::Caster<T>::cast(args->boxer, args->ths);
+      return Ruby::Caster<Arg>::cast(args->boxer, args->ths);
       }
     catch(const Crate::TypeException &type)
       {
