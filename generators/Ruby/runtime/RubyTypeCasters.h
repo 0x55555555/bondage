@@ -68,7 +68,7 @@ public:
 
   static bool canCast(Boxer *b, VALUE val)
     {
-    return Crate::Traits<T>::canUnbox(b, val);
+    return TYPE(val) == T_NIL || Crate::Traits<T>::canUnbox(b, val);
     }
 
   static Result cast(Boxer *b, VALUE val)
@@ -76,6 +76,11 @@ public:
     if (!canCast(b, val))
       {
       throw Crate::TypeException(Crate::findType<T>(), b->getType(val));
+      }
+
+    if (TYPE(val) == T_NIL)
+      {
+      return nullptr;
       }
 
     return Crate::Traits<T>::unbox(b, val);
@@ -107,7 +112,7 @@ public:
 template <typename T> class Caster<T*> : public PointerCaster<T> { };
 
 
-template <typename T> class Caster<T&> : public Caster<T*>
+template <typename T> class ReferenceCaster : public Caster<T*>
   {
 public:
   typedef decltype(*std::declval<typename Crate::Traits<T>::UnboxResult>()) Result;
@@ -139,6 +144,27 @@ public:
     }
   };
 
+template <typename T> class Caster<T&> : public ReferenceCaster<T>
+  {
+  };
+
+template <typename T> class Caster<std::shared_ptr<T>&> : public ReferenceCaster<std::shared_ptr<T>>
+  {
+public:
+  typedef typename std::shared_ptr<T> Result;
+
+  static Result cast(Boxer *b, VALUE val)
+    {
+    auto t = Caster<std::shared_ptr<T>*>::cast(b, val);
+    if (!t)
+      {
+      return Result();
+      }
+
+    return *t;
+    }
+  };
+
 template <typename T> class Caster<const T *> : public Caster<T *> { };
 template <typename T> class Caster<const T &> : public Caster<T &> { };
 template <typename T> class Caster : public Caster<const T &> { };
@@ -151,7 +177,7 @@ public:
     if (!result || !result->get())
       {
       *v = Qnil;
-      return;
+      return; 
       }
 
     Crate::Traits<std::shared_ptr<T>>::box(box, v, result);
