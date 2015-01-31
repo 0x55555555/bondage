@@ -53,12 +53,20 @@ struct GlobalVALUE
       : m_val(0)
     {
     }
+  GlobalVALUE(const GlobalVALUE &v)
+      : GlobalVALUE()
+    {
+    assign(v.m_val);
+    }
   ~GlobalVALUE()
     {
-    if (m_val)
-      {
-      rb_gc_unregister_address(&m_val);
-      }
+    clear();
+    }
+  GlobalVALUE &operator=(const GlobalVALUE &v)
+    {
+    clear();
+    assign(v.m_val);
+    return *this;
     }
 
   void assign(VALUE val)
@@ -66,6 +74,15 @@ struct GlobalVALUE
     REFLECT_ASSERT(!m_val);
     m_val = val;
     rb_gc_register_address(&m_val);
+    }
+
+  void clear()
+    {
+    if (m_val)
+      {
+      rb_gc_unregister_address(&m_val);
+      m_val = 0;
+      }
     }
 
   operator VALUE()
