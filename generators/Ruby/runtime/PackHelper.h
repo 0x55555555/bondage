@@ -190,7 +190,7 @@ public:
       {
       Function::template call<Builder>(&data);
       }
-    catch (const Reflect::CallException &e)
+    catch (const std::exception &e)
       {
       rb_raise(rb_eRuntimeError, "%s", e.what());
       }

@@ -159,7 +159,7 @@ public:
     }
 
 private:
-  template <typename Arg, typename...Args> void extractArguments(detail::GlobalVALUE *v, Arg &&a, Args &...args)
+  template <typename Arg, typename...Args> void extractArguments(detail::GlobalVALUE *v, Arg &&a, Args &&...args)
     {
     detail::GlobalVALUE &arg = *v++;
     extractArgument(arg, std::forward<Arg&&>(a));

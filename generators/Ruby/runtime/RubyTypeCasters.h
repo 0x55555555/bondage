@@ -42,10 +42,12 @@ inline VALUE fromDouble(double i) { return DBL2NUM(i); }
 inline double toDouble(VALUE v) { if (RB_TYPE_P(v, T_FIXNUM)) { return (double)FIX2LONG(v); } return DBL2NUM(v); }
 inline float toFloat(VALUE v) { return (float)toDouble(v); }
 
+inline VALUE fromUnsignedLongLong(unsigned long long i) { return LONG2FIX(i); }
 inline VALUE fromLong(long i) { return LONG2FIX(i); }
 inline VALUE fromInt(int i) { return INT2FIX(i); }
 inline VALUE fromSizeT(size_t i) { return ULL2NUM(i); }
 inline long toLong(VALUE v) { if (RB_TYPE_P(v, T_FIXNUM)) { return FIX2LONG(v); } return (long)DBL2NUM(v); }
+inline unsigned long long toUnsignedLongLong(VALUE v) { return (unsigned long long)toLong(v); }
 inline int toInt(VALUE v) { return (int)toLong(v); }
 inline size_t toSizeT(VALUE v) { return (size_t)toLong(v); }
 
@@ -59,6 +61,7 @@ template <> class Caster<long> : public SimpleCaster<long, canCastNumber, toLong
 template <> class Caster<size_t> : public SimpleCaster<size_t, canCastNumber, toSizeT, fromSizeT> { };
 template <> class Caster<float> : public SimpleCaster<float, canCastNumber, toFloat, fromFloat> { };
 template <> class Caster<double> : public SimpleCaster<double, canCastNumber, toDouble, fromDouble> { };
+template <> class Caster<unsigned long long> : public SimpleCaster<unsigned long long, canCastNumber, toUnsignedLongLong, fromUnsignedLongLong> { };
 template <> class Caster<bool> : public SimpleCaster<bool, canCastBool, toBool, fromBool> { };
 
 template <typename T> class PointerCaster
